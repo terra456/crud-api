@@ -2,12 +2,18 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
-    "allowJs": true
+    "module": "node16",
+    // "target": "es5",
+    "allowJs": false,
   },
   "ts-node": {
-    "esm": true
+    "transpileOnly": true,
+    "esm": true,
+    "require": ["tsconfig-paths/register"]
   },
-  "files": ["src/index.ts"]
+  "files": ["src/index.ts", "src/modules/usersData.ts"],
+  "exclude": [
+    "node_modules"
+  ],
+  "include": ["src/**/*","src/*", "declarations.d.ts"]
 }
