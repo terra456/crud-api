@@ -8,32 +8,34 @@ const server: http.Server = http.createServer((req, res) => {
   console.log(req.url, req.headers['content-type']);
 
   if (req.url.startsWith('/api/users')) {
-    
+    const sendResponse = (code: number, header: [string, string], str: string) => {
+      res.statusCode = code;
+      res.setHeader(...header);
+      res.write(str);
+      res.end();
+    };
     switch(req.method) {
       case 'GET':
        if (req.url === '/api/users') {
-        // console.log(usersData.getUsers);
         usersData.getUsers()
         .then((data: string) => {
-            res.setHeader('Content-type', 'text/json');
-            res.write(data);
-            res.end();
+          sendResponse(200, ['Content-type', 'text/json'],data);
         });
        } else {
         const newId = req.url.replace('/api/users/', '');
-        usersData.getUser(newId)
-        .then((data: UserType) => {
-          console.log(data);
-          res.statusCode = 201;
-          res.setHeader('Content-type', 'text/json');
-          res.write(JSON.stringify(data));
-          res.end();
+        usersData.validateUuid(newId)
+        .then((id: string) => {
+          usersData.getUser(id)
+          .then((data: UserType) => {
+            console.log(data);
+            sendResponse(200, ['Content-type', 'text/json'], JSON.stringify(data));
+          })
+          .catch((err: Error) => {
+            sendResponse(404, ['Content-type', 'text/plain'], err.message);
+          });
         })
         .catch((e: Error) => {
-          console.log(e.message);
-          res.statusCode = 404;
-          res.write(e.message);
-          res.end();
+          sendResponse(400, ['Content-type', 'text/plain'], e.message);
         });
        }
        break;
@@ -50,33 +52,18 @@ const server: http.Server = http.createServer((req, res) => {
               usersData.createUser(parsedData)
                 .then((data: UserType) => {
                   console.log(JSON.stringify(data));
-                  res.statusCode = 201;
-                  res.setHeader('Content-type', 'text/json');
-                  res.write(JSON.stringify(data));
-                  res.end();
+                  sendResponse(201, ['Content-type', 'text/json'], JSON.stringify(data));
                 })
                 .catch((err: Error) => {
-                  res.statusCode = 400;
-                  res.write(err.message);
-                  res.end();
+                  sendResponse(400, ['Content-type', 'text/plain'], err.message);
                   console.error('ERR ', err.message);
                 });
             } catch (e) {
-              res.statusCode = 400;
-              res.write(e.message);
-              res.end();
+              sendResponse(400, ['Content-type', 'text/plain'], e.message);
               console.error('ERROR ', e.message);
             }
           });
         }
-        // res.setHeader('Content-type', 'text/json');
-        // res.write('ehfgoeijfqwkdf[');
-        // res.end();
-        // req.setEncoding('utf8');
-        
-        
-        
-        // usersData.createUser({});
         break;
     }
   }

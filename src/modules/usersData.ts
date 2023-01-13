@@ -14,13 +14,20 @@ class UsersData {
 
   getUser(str: string) {
     const answer = new Promise((res, rej) => {
+      const user = this.users.find((el) => el.id === str);
+      if (user) {
+        res(user);
+      } else {
+        rej(new Error('user not found'));
+      }      
+    });
+    return answer;
+  }
+
+  async validateUuid(str: string) {
+    const answer = new Promise((res, rej) => {
       if (uuidValidate(str)) {
-        const user = this.users.find((el) => el.id === str);
-        if (user) {
-          res(user);
-        } else {
-          rej(new Error('user not find'));
-        }
+        res(str);
       } else {
         rej(new Error('userId is invalid'));
       }
