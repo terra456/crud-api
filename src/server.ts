@@ -5,15 +5,22 @@ import UsersData from "./modules/usersData.ts";
 const usersData = new UsersData();
 
 const server: http.Server = http.createServer((req, res) => {
-  console.log(req.url, req.headers['content-type']);
+
+  if (req.url === '/') {
+    res.statusCode = 200;
+    res.setHeader('Content-type', 'text/plain');
+    res.write('all is good');
+    res.end();
+  }
+  
+  const sendResponse = (code: number, header: [string, string], str: string) => {
+    res.statusCode = code;
+    res.setHeader(...header);
+    res.write(str);
+    res.end();
+  };
 
   if (req.url.startsWith('/api/users')) {
-    const sendResponse = (code: number, header: [string, string], str: string) => {
-      res.statusCode = code;
-      res.setHeader(...header);
-      res.write(str);
-      res.end();
-    };
     switch(req.method) {
       case 'GET':
        if (req.url === '/api/users') {
@@ -66,6 +73,8 @@ const server: http.Server = http.createServer((req, res) => {
         }
         break;
     }
+  } else {
+    sendResponse(404, ['Content-type', 'text/plain'], 'url does not find');
   }
 });
 
