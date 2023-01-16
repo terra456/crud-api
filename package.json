@@ -5,12 +5,11 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
+    "watch": "webpack --watch",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
-    "watch": "webpack --watch",
-    "dev": "nodemon --exec 'ts-node' src/index.ts",
-    "run": "ts-node src/index.ts",
+    "start:prod": "webpack --mode=production --node-env=production",
+    "start:dev": "nodemon --exec 'ts-node' src/index.ts",
     "test": "jest"
   },
   "nodemonConfig": {
