@@ -34,7 +34,6 @@ const server: http.Server = http.createServer((req, res) => {
         .then((id: string) => {
           usersData.getUser(id)
           .then((data: UserType) => {
-            console.log(data);
             sendResponse(200, ['Content-type', 'text/json'], JSON.stringify(data));
           })
           .catch((err: Error) => {
@@ -55,19 +54,15 @@ const server: http.Server = http.createServer((req, res) => {
           req.on('end', () => {
             try {
               const parsedData = JSON.parse(rawData);
-              console.log(parsedData);
               usersData.createUser(parsedData)
                 .then((data: UserType) => {
-                  console.log(JSON.stringify(data));
                   sendResponse(201, ['Content-type', 'text/json'], JSON.stringify(data));
                 })
                 .catch((err: Error) => {
                   sendResponse(400, ['Content-type', 'text/plain'], err.message);
-                  console.error('ERR ', err.message);
                 });
             } catch (e) {
               sendResponse(400, ['Content-type', 'text/plain'], e.message);
-              console.error('ERROR ', e.message);
             }
           });
         }
@@ -82,11 +77,8 @@ const server: http.Server = http.createServer((req, res) => {
           req.on('end', () => {
             try {
               const parsedData = JSON.parse(rawData);
-              console.log(rawData);
-              console.log(parsedData);
               usersData.updateUser(id, parsedData)
                 .then((data: UserType) => {
-                  console.log(data);
                   sendResponse(200, ['Content-type', 'text/json'], JSON.stringify(data))
                 })
                 .catch ((e: Error) => sendResponse(400, ['Content-type', 'text/plain'], e.message));
@@ -107,7 +99,6 @@ const server: http.Server = http.createServer((req, res) => {
               .then(() => {
                 usersData.deleteUser(id)
                   .then((data: UserType) => {
-                    console.log(data);
                     sendResponse(204, ['Content-type', 'text/plain'], `User ${id} is delited`)
                   })
               })
