@@ -12,7 +12,7 @@ class UsersData {
     return JSON.stringify(this.users);
   }
 
-  getUser(str: string) {
+  async getUser(str: string) {
     const answer = new Promise((res, rej) => {
       const user = this.users.find((el) => el.id === str);
       if (user) {
@@ -63,8 +63,22 @@ class UsersData {
     }
   }
 
-  updateUser(obj: any) {
-    const user = obj;
+  async updateUser(currentId: string, obj: any) {
+    const answer = new Promise((res, rej) => {
+      if (uuidValidate(currentId)) {
+        const userIndex = this.users.findIndex((el) => el.id === currentId);
+        const user = this.users[userIndex];
+        for (let key in user) {
+          if (obj[key]) {
+            user[key] = obj[key];
+          }
+        }
+        res(user);
+      } else {
+        rej(new Error('user does not found'));
+      }
+    });
+    return answer;
   }
 
   deliteUser(obj: any) {

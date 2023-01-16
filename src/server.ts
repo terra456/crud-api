@@ -72,6 +72,35 @@ const server: http.Server = http.createServer((req, res) => {
           });
         }
         break;
+      case 'PUT':
+        const idToChange = req.url.replace('/api/users/', '');
+        console.log(idToChange);
+        usersData.validateUuid(idToChange)
+        .then((id: string) => {
+          let rawData = '';
+          req.on('data', (chunk) => {
+            rawData += chunk;
+          });
+          req.on('end', () => {
+            try {
+              const parsedData = JSON.parse(rawData);
+              console.log(rawData);
+              console.log(parsedData);
+              usersData.updateUser(id, parsedData)
+                .then((data: UserType) => {
+                  console.log(data);
+                  sendResponse(200, ['Content-type', 'text/json'], JSON.stringify(data))
+                })
+                .catch ((e: Error) => sendResponse(400, ['Content-type', 'text/plain'], e.message));
+            }
+            catch (e) {
+              sendResponse(400, ['Content-type', 'text/plain'], e.message);
+            }
+          })
+        })
+        .catch((e: Error) => {
+          sendResponse(400, ['Content-type', 'text/plain'], e.message);
+        });
     }
   } else {
     sendResponse(404, ['Content-type', 'text/plain'], 'url does not find');
