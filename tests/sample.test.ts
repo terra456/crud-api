@@ -1,5 +1,4 @@
 import request from "supertest";
-// import superagent from 'superagent';
 import server from "../src/server.ts";
 
 const app = server;
