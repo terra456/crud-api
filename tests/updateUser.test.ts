@@ -39,6 +39,14 @@ describe('POST update user', () => {
     expect(response.text).toMatch(/john/);
   });
 
+  it('respond new data in the DB', async () => {
+    const response = await request(app)
+      .get(`/api/users/${user.id}`)
+      .set('Accept', 'application/json')
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/john/);
+  });
+
   afterAll(() => {
     app.close()
   });
