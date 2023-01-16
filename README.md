@@ -7,7 +7,7 @@
     Go to downloaded folder: $ cd async-race-api.
     Go to development branch: $ git branch -b development.
     Install dependencies: $ npm install.
-    Start server: $ npm run dev.
+    Start server: $ npm run start:dev.
     Now you can send requests to the address: http://localhost:4000.
 
 ## Usage
