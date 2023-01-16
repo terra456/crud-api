@@ -1,3 +1,9 @@
-import server from "./server.ts";
+import * as dotenv from 'dotenv';
+import server from './server.ts';
 
-server.listen(4001,'localhost');
+dotenv.config();
+const port = process.env.PORT;
+
+server.listen(port,'localhost', ()=> {
+  console.log(`Server is started on ${port} port`);
+});
