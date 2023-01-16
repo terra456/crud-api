@@ -4,14 +4,14 @@ import server from "../src/server.ts";
 const app = server;
 
 describe('GET /users', () => {
-  it('responds with correct status', async () => {
+  it('responds to get all users with correct status', async () => {
     const response = await request(app)
       .get('/api/users')
       .set('Accept', 'application/json')
     expect(response.status).toEqual(200);
   });
 
-  it('responds with json', async () => {
+  it('respons on incorrect adress', async () => {
     const response = await request(app)
       .get('/api/kfjepf')
       .set('Accept', 'application/json')
