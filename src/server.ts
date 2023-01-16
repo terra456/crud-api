@@ -21,6 +21,7 @@ const server: http.Server = http.createServer((req, res) => {
   };
 
   if (req.url.startsWith('/api/users')) {
+    const idToChange = req.url.replace('/api/users/', '');
     switch(req.method) {
       case 'GET':
        if (req.url === '/api/users') {
@@ -29,8 +30,7 @@ const server: http.Server = http.createServer((req, res) => {
           sendResponse(200, ['Content-type', 'text/json'],data);
         });
        } else {
-        const newId = req.url.replace('/api/users/', '');
-        usersData.validateUuid(newId)
+        usersData.validateUuid(idToChange)
         .then((id: string) => {
           usersData.getUser(id)
           .then((data: UserType) => {
@@ -73,8 +73,6 @@ const server: http.Server = http.createServer((req, res) => {
         }
         break;
       case 'PUT':
-        const idToChange = req.url.replace('/api/users/', '');
-        console.log(idToChange);
         usersData.validateUuid(idToChange)
         .then((id: string) => {
           let rawData = '';
@@ -101,6 +99,26 @@ const server: http.Server = http.createServer((req, res) => {
         .catch((e: Error) => {
           sendResponse(400, ['Content-type', 'text/plain'], e.message);
         });
+        break;
+      case 'DELETE':
+        usersData.validateUuid(idToChange)
+          .then((id: string) => {
+            usersData.getUser(id)
+              .then(() => {
+                usersData.deleteUser(id)
+                  .then((data: UserType) => {
+                    console.log(data);
+                    sendResponse(204, ['Content-type', 'text/plain'], `User ${id} is delited`)
+                  })
+              })
+              .catch((err: Error) => {
+                sendResponse(404, ['Content-type', 'text/plain'], err.message);
+              })
+          })
+          .catch((err: Error) => {
+            sendResponse(400, ['Content-type', 'text/plain'], err.message);
+          });
+          break;
     }
   } else {
     sendResponse(404, ['Content-type', 'text/plain'], 'url does not find');

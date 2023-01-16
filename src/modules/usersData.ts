@@ -81,8 +81,17 @@ class UsersData {
     return answer;
   }
 
-  deliteUser(obj: any) {
-    const user = obj;
+  async deleteUser(currentId: string) {
+    const answer = new Promise((res, rej) => {
+      const userIndex = this.users.findIndex((el) => el.id === currentId);
+      if (userIndex >= 0) {
+        const deletedUser = this.users.splice(userIndex, 1);
+        res(deletedUser);
+      } else {
+        rej(new Error('user does not found'));
+      }
+    });
+    return answer;
   }
 }
 
