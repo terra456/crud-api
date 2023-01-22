@@ -35,9 +35,9 @@
   POST
 - Properties:
   - `id` — unique identifier (`string`, `uuid`) generated on server side
-  - `username` — user's name (`string`, **required**)
+  - `name` — user's name (`string`, **required**)
   - `age` — user's age (`number`, **required**)
-  - `hobbies` — user's hobbies (`array` of `strings` or empty `array`, **required**)
+  - `hobbies` — user's hobbies (`string`, **required**)
 - Server answer with `status code` **201** and newly created record
 - Server answer with `status code` **400** and corresponding message if request `body` does not contain **required** fields
 
